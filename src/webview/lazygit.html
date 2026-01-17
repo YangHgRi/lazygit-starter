@@ -17,6 +17,19 @@
         width: 100vw;
         height: 100vh;
       }
+      /* VSCode-like scrollbar */
+      .xterm-viewport::-webkit-scrollbar {
+        width: 10px;
+      }
+      .xterm-viewport::-webkit-scrollbar-thumb {
+        background: var(--vscode-scrollbarSlider-background);
+      }
+      .xterm-viewport::-webkit-scrollbar-thumb:hover {
+        background: var(--vscode-scrollbarSlider-hoverBackground);
+      }
+      .xterm-viewport::-webkit-scrollbar-thumb:active {
+        background: var(--vscode-scrollbarSlider-activeBackground);
+      }
     </style>
   </head>
   <body>
@@ -26,27 +39,48 @@
 
       // Get VSCode theme colors
       const style = getComputedStyle(document.documentElement);
-      const background = style.getPropertyValue("--vscode-editor-background").trim();
-      const foreground = style.getPropertyValue("--vscode-editor-foreground").trim();
-      const cursor = style.getPropertyValue("--vscode-terminal-cursor-foreground").trim();
+      const getColor = (name) => style.getPropertyValue(name).trim();
 
       const term = new Terminal({
         cursorBlink: true,
         allowProposedApi: true,
         macOptionIsMeta: true,
-        fontFamily:
-          style.getPropertyValue("--vscode-editor-font-family").trim() || 'Consolas, "Courier New", monospace',
-        fontSize: parseInt(style.getPropertyValue("--vscode-editor-font-size").trim()) || 14,
+        fontFamily: getColor("--vscode-editor-font-family") || 'Consolas, "Courier New", monospace',
+        fontSize: parseInt(getColor("--vscode-editor-font-size")) || 14,
         theme: {
-          background: background,
-          foreground: foreground,
-          cursor: cursor,
+          background: getColor("--vscode-editor-background"),
+          foreground: getColor("--vscode-editor-foreground"),
+          cursor: getColor("--vscode-terminal-cursor-foreground"),
+          selectionBackground: getColor("--vscode-terminal-selectionBackground"),
+          black: getColor("--vscode-terminal-ansiBlack"),
+          red: getColor("--vscode-terminal-ansiRed"),
+          green: getColor("--vscode-terminal-ansiGreen"),
+          yellow: getColor("--vscode-terminal-ansiYellow"),
+          blue: getColor("--vscode-terminal-ansiBlue"),
+          magenta: getColor("--vscode-terminal-ansiMagenta"),
+          cyan: getColor("--vscode-terminal-ansiCyan"),
+          white: getColor("--vscode-terminal-ansiWhite"),
+          brightBlack: getColor("--vscode-terminal-ansiBrightBlack"),
+          brightRed: getColor("--vscode-terminal-ansiBrightRed"),
+          brightGreen: getColor("--vscode-terminal-ansiBrightGreen"),
+          brightYellow: getColor("--vscode-terminal-ansiBrightYellow"),
+          brightBlue: getColor("--vscode-terminal-ansiBrightBlue"),
+          brightMagenta: getColor("--vscode-terminal-ansiBrightMagenta"),
+          brightCyan: getColor("--vscode-terminal-ansiBrightCyan"),
+          brightWhite: getColor("--vscode-terminal-ansiBrightWhite"),
         },
       });
 
       const fitAddon = new FitAddon.FitAddon();
       term.loadAddon(fitAddon);
       term.open(document.getElementById("terminal"));
+
+      term.focus();
+
+      // Focus terminal when clicking anywhere in the body
+      document.body.addEventListener("click", () => {
+        term.focus();
+      });
 
       // Debounced resize
       let resizeTimeout;
