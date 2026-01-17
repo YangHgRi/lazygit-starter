@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as pty from "node-pty";
+import * as fs from "fs";
 
 export class LazygitPanel {
   public static readonly viewType = "lazygit";
@@ -131,83 +132,13 @@ export class LazygitPanel {
       vscode.Uri.joinPath(this._extensionUri, "node_modules", "xterm-addon-fit", "lib", "xterm-addon-fit.js"),
     );
 
-    return `<!DOCTYPE html>
-  	<html lang="en">
-  	<head>
-  		<meta charset="UTF-8">
-  		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-  		<link rel="stylesheet" href="${xtermCss}" />
-  		<script src="${xtermJs}"></script>
-  		<script src="${xtermFitJs}"></script>
-  		<style>
-  			body { margin: 0; padding: 0; background-color: var(--vscode-editor-background); overflow: hidden; }
-  			#terminal { width: 100vw; height: 100vh; }
-  		</style>
-  	</head>
-  	<body>
-  		<div id="terminal"></div>
-  		<script>
-  			const vscode = acquireVsCodeApi();
-  			
-  			// Get VSCode theme colors
-  			const style = getComputedStyle(document.documentElement);
-  			const background = style.getPropertyValue('--vscode-editor-background').trim();
-  			const foreground = style.getPropertyValue('--vscode-editor-foreground').trim();
-  			const cursor = style.getPropertyValue('--vscode-terminal-cursor-foreground').trim();
+    const htmlPath = vscode.Uri.joinPath(this._extensionUri, "src", "webview", "lazygit.html");
+    let html = fs.readFileSync(htmlPath.fsPath, "utf8");
 
-  			const term = new Terminal({
-  				cursorBlink: true,
-  				allowProposedApi: true,
-  				macOptionIsMeta: true,
-  				fontFamily: style.getPropertyValue('--vscode-editor-font-family').trim() || 'Consolas, "Courier New", monospace',
-  				fontSize: parseInt(style.getPropertyValue('--vscode-editor-font-size').trim()) || 14,
-  				theme: {
-  					background: background,
-  					foreground: foreground,
-  					cursor: cursor
-  				}
-  			});
+    html = html.replace("{{xtermCss}}", xtermCss.toString());
+    html = html.replace("{{xtermJs}}", xtermJs.toString());
+    html = html.replace("{{xtermFitJs}}", xtermFitJs.toString());
 
-  			const fitAddon = new FitAddon.FitAddon();
-  			term.loadAddon(fitAddon);
-  			term.open(document.getElementById('terminal'));
-  			
-  			// Debounced resize
-  			let resizeTimeout;
-  			function handleResize() {
-  				fitAddon.fit();
-  				vscode.postMessage({
-  					command: 'resize',
-  					cols: term.cols,
-  					rows: term.rows
-  				});
-  			}
-
-  			window.addEventListener('resize', () => {
-  				clearTimeout(resizeTimeout);
-  				resizeTimeout = setTimeout(handleResize, 100);
-  			});
-
-  			term.onData(data => {
-  				vscode.postMessage({ command: 'data', data });
-  			});
-
-  			window.addEventListener('message', event => {
-  				const message = event.data;
-  				if (message.command === 'data') {
-  					term.write(message.data);
-  				} else if (message.command === 'set-state') {
-  					vscode.setState(message.state);
-  				}
-  			});
-
-  			// Initial fit and state sync
-  			handleResize();
-
-  			// Signal that webview is ready to receive data
-  			vscode.postMessage({ command: 'ready' });
-  		</script>
-  	</body>
-  	</html>`;
+    return html;
   }
 }
