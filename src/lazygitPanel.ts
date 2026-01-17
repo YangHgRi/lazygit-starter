@@ -3,17 +3,31 @@ import * as path from "path";
 import * as pty from "node-pty";
 import * as fs from "fs";
 
+interface LazygitState {
+  cwd: string;
+}
+
+interface WebviewMessage {
+  command: "ready" | "data" | "resize" | "set-state";
+  data?: string;
+  cols?: number;
+  rows?: number;
+  state?: LazygitState;
+}
+
 export class LazygitPanel {
   public static readonly viewType = "lazygit";
   private _panel: vscode.WebviewPanel;
-  private _ptyProcess: pty.IPty;
+  private _ptyProcess: pty.IPty | undefined;
   private _disposables: vscode.Disposable[] = [];
   private _isWebviewReady = false;
   private _dataBuffer: string[] = [];
   private _extensionUri: vscode.Uri;
 
   public static createOrShow(context: vscode.ExtensionContext, cwd: string) {
-    const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined;
+    const column = vscode.window.activeTextEditor
+      ? vscode.window.activeTextEditor.viewColumn
+      : undefined;
 
     const panel = vscode.window.createWebviewPanel(
       LazygitPanel.viewType,
@@ -23,8 +37,12 @@ export class LazygitPanel {
         enableScripts: true,
         retainContextWhenHidden: true,
         localResourceRoots: [
-          vscode.Uri.file(path.join(context.extensionPath, "node_modules", "xterm")),
-          vscode.Uri.file(path.join(context.extensionPath, "node_modules", "xterm-addon-fit")),
+          vscode.Uri.file(
+            path.join(context.extensionPath, "node_modules", "xterm"),
+          ),
+          vscode.Uri.file(
+            path.join(context.extensionPath, "node_modules", "xterm-addon-fit"),
+          ),
         ],
       },
     );
@@ -35,11 +53,19 @@ export class LazygitPanel {
     return new LazygitPanel(panel, context.extensionUri, cwd);
   }
 
-  public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, cwd: string) {
+  public static revive(
+    panel: vscode.WebviewPanel,
+    extensionUri: vscode.Uri,
+    cwd: string,
+  ) {
     return new LazygitPanel(panel, extensionUri, cwd);
   }
 
-  private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, cwd: string) {
+  private constructor(
+    panel: vscode.WebviewPanel,
+    extensionUri: vscode.Uri,
+    cwd: string,
+  ) {
     this._panel = panel;
     this._extensionUri = extensionUri;
     this._panel.iconPath = new vscode.ThemeIcon("git-branch");
@@ -53,17 +79,20 @@ export class LazygitPanel {
         cols: 80,
         rows: 24,
         cwd: cwd,
-        env: process.env as any,
+        env: process.env as { [key: string]: string },
       });
     } catch (err) {
-      // Fallback to shell if lazygit isn't in PATH directly
+      console.warn(
+        "Failed to spawn lazygit directly, falling back to shell",
+        err,
+      );
       const fallbackShell = process.platform === "win32" ? "cmd.exe" : "bash";
       this._ptyProcess = pty.spawn(fallbackShell, [], {
         name: "xterm-256color",
         cols: 80,
         rows: 24,
         cwd: cwd,
-        env: process.env as any,
+        env: process.env as { [key: string]: string },
       });
       this._ptyProcess.write("lazygit\r");
     }
@@ -73,43 +102,59 @@ export class LazygitPanel {
 
     // Handle messages from webview
     this._panel.webview.onDidReceiveMessage(
-      (message) => {
+      (message: WebviewMessage) => {
         switch (message.command) {
           case "ready":
             this._isWebviewReady = true;
             // Flush buffered data
             while (this._dataBuffer.length > 0) {
               const data = this._dataBuffer.shift();
-              this._panel.webview.postMessage({ command: "data", data });
+              if (data) {
+                this._panel.webview.postMessage({ command: "data", data });
+              }
             }
             break;
           case "data":
-            this._ptyProcess.write(message.data);
+            if (message.data) {
+              this._ptyProcess?.write(message.data);
+            }
             break;
           case "resize":
-            this._ptyProcess.resize(message.cols, message.rows);
+            if (message.cols && message.rows) {
+              this._ptyProcess?.resize(message.cols, message.rows);
+            }
             break;
         }
       },
-      null,
+      undefined,
       this._disposables,
     );
 
     // Send data from pty to webview
-    this._ptyProcess.onData((data) => {
+    const dataListener = this._ptyProcess.onData((data) => {
       if (this._isWebviewReady) {
         this._panel.webview.postMessage({ command: "data", data });
       } else {
         this._dataBuffer.push(data);
       }
     });
+    this._disposables.push({ dispose: () => dataListener.dispose() });
+
+    // Handle process exit
+    const exitListener = this._ptyProcess.onExit(() => {
+      this.dispose();
+    });
+    this._disposables.push({ dispose: () => exitListener.dispose() });
 
     // Clean up on close
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
   }
 
   public dispose() {
-    this._ptyProcess.kill();
+    if (this._ptyProcess) {
+      this._ptyProcess.kill();
+      this._ptyProcess = undefined;
+    }
     this._panel.dispose();
     while (this._disposables.length) {
       const x = this._disposables.pop();
@@ -124,16 +169,39 @@ export class LazygitPanel {
 
     // Local path to assets
     const xtermCss = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "node_modules", "xterm", "css", "xterm.css"),
+      vscode.Uri.joinPath(
+        this._extensionUri,
+        "node_modules",
+        "xterm",
+        "css",
+        "xterm.css",
+      ),
     );
     const xtermJs = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "node_modules", "xterm", "lib", "xterm.js"),
+      vscode.Uri.joinPath(
+        this._extensionUri,
+        "node_modules",
+        "xterm",
+        "lib",
+        "xterm.js",
+      ),
     );
     const xtermFitJs = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "node_modules", "xterm-addon-fit", "lib", "xterm-addon-fit.js"),
+      vscode.Uri.joinPath(
+        this._extensionUri,
+        "node_modules",
+        "xterm-addon-fit",
+        "lib",
+        "xterm-addon-fit.js",
+      ),
     );
 
-    const htmlPath = vscode.Uri.joinPath(this._extensionUri, "src", "webview", "lazygit.html");
+    const htmlPath = vscode.Uri.joinPath(
+      this._extensionUri,
+      "src",
+      "webview",
+      "lazygit.html",
+    );
     let html = fs.readFileSync(htmlPath.fsPath, "utf8");
 
     html = html.replace("{{xtermCss}}", xtermCss.toString());
