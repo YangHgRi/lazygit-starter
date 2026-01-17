@@ -9,15 +9,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     const folderPath = uri.fsPath;
 
-    // Create a new terminal in the editor area and send the command to start lazygit
+    // Create a new terminal in the editor area with lazygit as the shell process
     const terminal = vscode.window.createTerminal({
       name: "Lazygit",
       cwd: folderPath,
       location: vscode.TerminalLocation.Editor,
+      shellPath: "lazygit",
     });
 
     terminal.show();
-    terminal.sendText("lazygit");
   });
 
   context.subscriptions.push(disposable);
