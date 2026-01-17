@@ -17,7 +17,7 @@ export class LazygitPanel {
 
     const panel = vscode.window.createWebviewPanel(
       LazygitPanel.viewType,
-      `Lazygit: ${path.basename(cwd)}`,
+      `${path.basename(cwd)}`,
       column || vscode.ViewColumn.One,
       {
         enableScripts: true,
