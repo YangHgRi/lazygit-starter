@@ -42,6 +42,7 @@ export class LazygitPanel {
   private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, cwd: string) {
     this._panel = panel;
     this._extensionUri = extensionUri;
+    this._panel.iconPath = new vscode.ThemeIcon("git-branch");
 
     // Launch lazygit process directly to ensure proper mouse and terminal control
     const shell = process.platform === "win32" ? "lazygit.exe" : "lazygit";
