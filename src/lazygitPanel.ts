@@ -9,6 +9,7 @@ export class LazygitPanel {
   private _disposables: vscode.Disposable[] = [];
   private _isWebviewReady = false;
   private _dataBuffer: string[] = [];
+  private _extensionUri: vscode.Uri;
 
   public static createOrShow(context: vscode.ExtensionContext, cwd: string) {
     const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined;
@@ -20,6 +21,10 @@ export class LazygitPanel {
       {
         enableScripts: true,
         retainContextWhenHidden: true,
+        localResourceRoots: [
+          vscode.Uri.file(path.join(context.extensionPath, "node_modules", "xterm")),
+          vscode.Uri.file(path.join(context.extensionPath, "node_modules", "xterm-addon-fit")),
+        ],
       },
     );
 
@@ -35,6 +40,7 @@ export class LazygitPanel {
 
   private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, cwd: string) {
     this._panel = panel;
+    this._extensionUri = extensionUri;
 
     // Launch lazygit process directly to ensure proper mouse and terminal control
     const shell = process.platform === "win32" ? "lazygit.exe" : "lazygit";
@@ -112,14 +118,27 @@ export class LazygitPanel {
   }
 
   private _getHtmlForWebview() {
+    const webview = this._panel.webview;
+
+    // Local path to assets
+    const xtermCss = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "node_modules", "xterm", "css", "xterm.css"),
+    );
+    const xtermJs = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "node_modules", "xterm", "lib", "xterm.js"),
+    );
+    const xtermFitJs = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "node_modules", "xterm-addon-fit", "lib", "xterm-addon-fit.js"),
+    );
+
     return `<!DOCTYPE html>
   	<html lang="en">
   	<head>
   		<meta charset="UTF-8">
   		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-  		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
-  		<script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
-  		<script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
+  		<link rel="stylesheet" href="${xtermCss}" />
+  		<script src="${xtermJs}"></script>
+  		<script src="${xtermFitJs}"></script>
   		<style>
   			body { margin: 0; padding: 0; background-color: var(--vscode-editor-background); overflow: hidden; }
   			#terminal { width: 100vw; height: 100vh; }
