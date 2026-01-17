@@ -1,28 +1,34 @@
 import * as vscode from "vscode";
-import * as path from "path";
+import { LazygitPanel } from "./lazygitPanel";
 
 export function activate(context: vscode.ExtensionContext) {
-  let disposable = vscode.commands.registerCommand("lazygit-starter.openLazygit", (uri: vscode.Uri) => {
-    if (!uri) {
-      vscode.window.showErrorMessage("Please right-click a folder to open Lazygit.");
-      return;
-    }
+  // 1. Register the command to open Lazygit in a Webview
+  context.subscriptions.push(
+    vscode.commands.registerCommand("lazygit-starter.openLazygit", (uri: vscode.Uri) => {
+      if (!uri) {
+        vscode.window.showErrorMessage("Please right-click a folder to open Lazygit.");
+        return;
+      }
+      LazygitPanel.createOrShow(context, uri.fsPath);
+    }),
+  );
 
-    const folderPath = uri.fsPath;
-
-    // Create a new terminal in the editor area with lazygit as the shell process
-    const terminal = vscode.window.createTerminal({
-      name: `${path.basename(folderPath)}`,
-      cwd: folderPath,
-      location: vscode.TerminalLocation.Editor,
-      shellPath: "lazygit",
-      iconPath: new vscode.ThemeIcon("git-branch"),
+  // 2. Register the serializer for restoration after VSCode restart
+  // This is the key to stable tab restoration
+  if (vscode.window.registerWebviewPanelSerializer) {
+    vscode.window.registerWebviewPanelSerializer(LazygitPanel.viewType, {
+      async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: any) {
+        // VSCode restores the 'state' which we set via vscode.setState() in the webview
+        const cwd = state?.cwd;
+        if (cwd) {
+          LazygitPanel.revive(webviewPanel, context.extensionUri, cwd);
+        } else {
+          // Fallback or cleanup if no state
+          webviewPanel.dispose();
+        }
+      },
     });
-
-    terminal.show();
-  });
-
-  context.subscriptions.push(disposable);
+  }
 }
 
 export function deactivate() {}
