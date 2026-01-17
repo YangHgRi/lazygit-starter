@@ -15,6 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
       cwd: folderPath,
       location: vscode.TerminalLocation.Editor,
       shellPath: "lazygit",
+      iconPath: new vscode.ThemeIcon("git-branch"),
     });
 
     terminal.show();
