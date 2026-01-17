@@ -28,7 +28,7 @@
         {
           "when": "explorerResourceIsFolder",
           "command": "lazygit-starter.openLazygit",
-          "group": "navigation"
+          "group": "z_commands"
         }
       ]
     }
