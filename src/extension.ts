@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Create a new terminal in the editor area with lazygit as the shell process
     const terminal = vscode.window.createTerminal({
-      name: `${path.basename(folderPath)} - Lazygit`,
+      name: `${path.basename(folderPath)}`,
       cwd: folderPath,
       location: vscode.TerminalLocation.Editor,
       shellPath: "lazygit",
