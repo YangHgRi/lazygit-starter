@@ -1,5 +1,10 @@
 {
   "name": "lazygit-starter",
+  "publisher": "HenryYang",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YangHgRi/lazygit-starter"
+  },
   "displayName": "Lazygit Starter",
   "description": "Open lazygit in a new terminal tab from a folder context menu.",
   "version": "0.0.1",
@@ -34,7 +39,8 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package -o out"
   },
   "devDependencies": {
     "@types/vscode": "^1.75.0",
@@ -42,6 +48,7 @@
     "typescript": "^4.9.5",
     "eslint": "^8.34.0",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
-    "@typescript-eslint/parser": "^5.53.0"
+    "@typescript-eslint/parser": "^5.53.0",
+    "@vscode/vsce": "^2.19.0"
   }
 }
