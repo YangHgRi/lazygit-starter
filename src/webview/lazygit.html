@@ -16,6 +16,10 @@
       #terminal {
         width: 100vw;
         height: 100vh;
+        transition: opacity 0.1s ease-in-out;
+      }
+      body.blur #terminal {
+        opacity: 0.75;
       }
       /* VSCode-like scrollbar */
       .xterm-viewport::-webkit-scrollbar {
@@ -47,6 +51,8 @@
         macOptionIsMeta: true,
         fontFamily: getColor("--vscode-editor-font-family") || 'Consolas, "Courier New", monospace',
         fontSize: parseInt(getColor("--vscode-editor-font-size")) || 14,
+        lineHeight: 1.2,
+        minimumContrastRatio: 4.5, // Ensure readability against background
         theme: {
           background: getColor("--vscode-editor-background"),
           foreground: getColor("--vscode-editor-foreground"),
@@ -80,6 +86,15 @@
       // Focus terminal when clicking anywhere in the body
       document.body.addEventListener("click", () => {
         term.focus();
+      });
+
+      window.addEventListener("focus", () => {
+        document.body.classList.remove("blur");
+        term.focus();
+      });
+
+      window.addEventListener("blur", () => {
+        document.body.classList.add("blur");
       });
 
       // Debounced resize
