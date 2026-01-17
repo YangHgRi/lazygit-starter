@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as path from "path";
 
 export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand("lazygit-starter.openLazygit", (uri: vscode.Uri) => {
@@ -11,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Create a new terminal in the editor area with lazygit as the shell process
     const terminal = vscode.window.createTerminal({
-      name: "Lazygit",
+      name: `${path.basename(folderPath)} - Lazygit`,
       cwd: folderPath,
       location: vscode.TerminalLocation.Editor,
       shellPath: "lazygit",
