@@ -52,9 +52,9 @@
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
     "package": "vsce package -o out",
-    "deploy:patch": "npm version patch && vsce publish",
-    "deploy:minor": "npm version minor && vsce publish",
-    "deploy:major": "npm version major && vsce publish"
+    "deploy:patch": "npm version patch -m \"chore: release %s\" && vsce publish",
+    "deploy:minor": "npm version minor -m \"chore: release %s\" && vsce publish",
+    "deploy:major": "npm version major -m \"chore: release %s\" && vsce publish"
   },
   "devDependencies": {
     "@types/node": "16.x",

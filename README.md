@@ -39,15 +39,6 @@ This extension currently does not contribute any specific settings.
 
 - **Executable Path:** Ensure `lazygit` is correctly installed. If the extension cannot find the `lazygit` executable, it may fall back to your default shell.
 
-## 📝 Release Notes
-
-### 0.0.1
-
-- Initial release of **Lazygit Starter**.
-- Core folder context menu integration.
-- Smooth and responsive integrated terminal experience.
-- Theming and state persistence support.
-
 ---
 
 **Enjoy a faster Git workflow with Lazygit Starter!** 🌟
