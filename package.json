@@ -43,7 +43,7 @@
       "editor/title": [
         {
           "command": "lazygit-starter.refresh",
-          "when": "webviewId == 'lazygit'",
+          "when": "lazygitActive",
           "group": "navigation"
         }
       ],

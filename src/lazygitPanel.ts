@@ -142,8 +142,19 @@ export class LazygitPanel {
     });
     this._disposables.push({ dispose: () => exitListener.dispose() });
 
-    // Clean up on close
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
+
+    // Update context when focus changes
+    this._panel.onDidChangeViewState(
+      (e) => {
+        vscode.commands.executeCommand("setContext", "lazygitActive", e.webviewPanel.active);
+      },
+      null,
+      this._disposables,
+    );
+
+    // Set initial context
+    vscode.commands.executeCommand("setContext", "lazygitActive", true);
   }
 
   public refresh() {
@@ -154,6 +165,7 @@ export class LazygitPanel {
     if (LazygitPanel.currentPanel === this) {
       LazygitPanel.currentPanel = undefined;
     }
+    vscode.commands.executeCommand("setContext", "lazygitActive", false);
     if (this._ptyProcess) {
       this._ptyProcess.kill();
       this._ptyProcess = undefined;
