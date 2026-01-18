@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{xtermCss}}" />
     <script src="{{xtermJs}}"></script>
     <script src="{{xtermFitJs}}"></script>
+    <script src="{{xtermWebglJs}}"></script>
     <style>
       body {
         margin: 0;
@@ -28,7 +29,6 @@
     <script>
       const vscode = acquireVsCodeApi();
 
-      // Get VSCode theme colors
       const style = getComputedStyle(document.documentElement);
       const getColor = (name) => style.getPropertyValue(name).trim();
 
@@ -38,8 +38,7 @@
         macOptionIsMeta: true,
         fontFamily: getColor("--vscode-editor-font-family") || 'Consolas, "Courier New", monospace',
         fontSize: parseInt(getColor("--vscode-editor-font-size")) || 14,
-        lineHeight: 1.2,
-        minimumContrastRatio: 4.5, // Ensure readability against background
+        lineHeight: 1,
         theme: {
           background: getColor("--vscode-editor-background"),
           foreground: getColor("--vscode-editor-foreground"),
@@ -66,11 +65,17 @@
 
       const fitAddon = new FitAddon.FitAddon();
       term.loadAddon(fitAddon);
-      term.open(document.getElementById("terminal"));
 
+      try {
+        const webglAddon = new WebglAddon.WebglAddon();
+        term.loadAddon(webglAddon);
+      } catch (e) {
+        console.warn("WebGL addon could not be loaded, falling back to standard rendering", e);
+      }
+
+      term.open(document.getElementById("terminal"));
       term.focus();
 
-      // Focus terminal when clicking anywhere in the body
       document.body.addEventListener("click", () => {
         term.focus();
       });
@@ -84,7 +89,6 @@
         document.body.classList.add("blur");
       });
 
-      // Debounced resize
       let resizeTimeout;
       function handleResize() {
         fitAddon.fit();
@@ -113,10 +117,7 @@
         }
       });
 
-      // Initial fit and state sync
       handleResize();
-
-      // Signal that webview is ready to receive data
       vscode.postMessage({ command: "ready" });
     </script>
   </body>

@@ -37,6 +37,7 @@ export class LazygitPanel {
         localResourceRoots: [
           vscode.Uri.file(path.join(context.extensionPath, "node_modules", "xterm")),
           vscode.Uri.file(path.join(context.extensionPath, "node_modules", "xterm-addon-fit")),
+          vscode.Uri.file(path.join(context.extensionPath, "node_modules", "xterm-addon-webgl")),
         ],
       },
     );
@@ -168,6 +169,9 @@ export class LazygitPanel {
     const xtermFitJs = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "node_modules", "xterm-addon-fit", "lib", "xterm-addon-fit.js"),
     );
+    const xtermWebglJs = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "node_modules", "xterm-addon-webgl", "lib", "xterm-addon-webgl.js"),
+    );
 
     const htmlPath = vscode.Uri.joinPath(this._extensionUri, "src", "webview", "lazygit.html");
     let html = fs.readFileSync(htmlPath.fsPath, "utf8");
@@ -175,6 +179,7 @@ export class LazygitPanel {
     html = html.replace("{{xtermCss}}", xtermCss.toString());
     html = html.replace("{{xtermJs}}", xtermJs.toString());
     html = html.replace("{{xtermFitJs}}", xtermFitJs.toString());
+    html = html.replace("{{xtermWebglJs}}", xtermWebglJs.toString());
 
     return html;
   }
