@@ -2,6 +2,10 @@
 
 All notable changes to the "lazygit-starter" extension will be documented in this file.
 
+## [0.0.5] - 2026-01-18
+
+- **TUI Rendering Fix**: Fixed character ghosting/artifacts when switching views in lazygit by explicitly setting `TERM` and `COLORTERM` environment variables.
+
 ## [0.0.4] - 2026-01-18
 
 - **Terminal Fix**: Disabled xterm.js scrollback to fix UI artifacts and character ghosting in the TUI.
