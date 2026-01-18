@@ -114,6 +114,8 @@
           term.write(message.data);
         } else if (message.command === "set-state") {
           vscode.setState(message.state);
+        } else if (message.command === "refresh") {
+          handleResize();
         }
       });
 

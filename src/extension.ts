@@ -13,6 +13,12 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
+  context.subscriptions.push(
+    vscode.commands.registerCommand("lazygit-starter.refresh", () => {
+      LazygitPanel.currentPanel?.refresh();
+    }),
+  );
+
   // 2. Register the serializer for restoration after VSCode restart
   // This is the key to stable tab restoration
   if (vscode.window.registerWebviewPanelSerializer) {

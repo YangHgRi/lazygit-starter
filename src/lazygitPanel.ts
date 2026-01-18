@@ -17,6 +17,7 @@ interface WebviewMessage {
 
 export class LazygitPanel {
   public static readonly viewType = "lazygit";
+  public static currentPanel: LazygitPanel | undefined;
   private _panel: vscode.WebviewPanel;
   private _ptyProcess: pty.IPty | undefined;
   private _disposables: vscode.Disposable[] = [];
@@ -56,6 +57,8 @@ export class LazygitPanel {
     this._panel = panel;
     this._extensionUri = extensionUri;
     this._panel.iconPath = new vscode.ThemeIcon("git-branch");
+
+    LazygitPanel.currentPanel = this;
 
     // Launch lazygit process directly to ensure proper mouse and terminal control
     const shell = process.platform === "win32" ? "lazygit.exe" : "lazygit";
@@ -143,7 +146,14 @@ export class LazygitPanel {
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
   }
 
+  public refresh() {
+    this._panel.webview.postMessage({ command: "refresh" });
+  }
+
   public dispose() {
+    if (LazygitPanel.currentPanel === this) {
+      LazygitPanel.currentPanel = undefined;
+    }
     if (this._ptyProcess) {
       this._ptyProcess.kill();
       this._ptyProcess = undefined;

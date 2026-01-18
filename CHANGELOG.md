@@ -2,10 +2,18 @@
 
 All notable changes to the "lazygit-starter" extension will be documented in this file.
 
+## [0.0.8] - 2026-01-18
+
+- **Manual Refresh**: Added a refresh button in the editor title bar to manually clear screen artifacts by triggering a TUI redraw.
+- **Code Refinement**: Cleaned up experimental rendering hacks and optimized terminal initialization sequence.
+
+## [0.0.7] - 2026-01-18
+
+- **Visual Fix**: Increased `lineHeight` to `1.2` in xterm.js to provide better character vertical spacing and reduce overlap.
+
 ## [0.0.6] - 2026-01-18
 
 - **Performance & Stability**: Replaced DOM renderer with `xterm-addon-webgl` for GPU-accelerated rendering, reducing visual artifacts.
-- **Code Refinement**: Cleaned up experimental rendering hacks and optimized terminal initialization sequence for a more robust TUI experience.
 - **Process Optimization**: Improved PTY lifecycle management and environment variable handling (UTF-8, ConPTY).
 
 ## [0.0.5] - 2026-01-18

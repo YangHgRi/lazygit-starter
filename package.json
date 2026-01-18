@@ -32,9 +32,21 @@
       {
         "command": "lazygit-starter.openLazygit",
         "title": "Open with lazygit"
+      },
+      {
+        "command": "lazygit-starter.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
       }
     ],
     "menus": {
+      "editor/title": [
+        {
+          "command": "lazygit-starter.refresh",
+          "when": "webviewId == 'lazygit'",
+          "group": "navigation"
+        }
+      ],
       "explorer/context": [
         {
           "when": "explorerResourceIsFolder",
