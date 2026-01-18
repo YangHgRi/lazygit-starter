@@ -2,7 +2,8 @@
 
 [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/HenryYang.lazygit-starter?style=flat-square&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=HenryYang.lazygit-starter)
 [![Installs](https://img.shields.io/visual-studio-marketplace/i/HenryYang.lazygit-starter?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=HenryYang.lazygit-starter)
-[![License](https://img.shields.io/github/license/YangHgRi/lazygit-starter?style=flat-square)](LICENSE)
+[![Rating](https://img.shields.io/visual-studio-marketplace/r/HenryYang.lazygit-starter?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=HenryYang.lazygit-starter)
+[![GitHub stars](https://img.shields.io/github/stars/YangHgRi/lazygit-starter?style=flat-square&logo=github)](https://github.com/YangHgRi/lazygit-starter)
 
 Open [lazygit](https://github.com/jesseduffield/lazygit) in a new VSCode Webview tab directly from your folder context menu. Streamline your Git workflow without ever leaving your editor!
 
@@ -11,7 +12,7 @@ Open [lazygit](https://github.com/jesseduffield/lazygit) in a new VSCode Webview
 ## ✨ Features
 
 - **📂 Folder Context Menu Integration** - Right-click any folder in the Explorer and select "Open with lazygit" to jump straight into action.
-- **🖥️ Embedded Webview Experience** - Runs `lazygit` inside a VSCode tab using `xterm.js` and `node-pty`, eliminating the need to switch to an external terminal.
+- **🖥️ Integrated Terminal Experience** - Runs `lazygit` directly inside a VSCode tab, eliminating the need to switch to external terminal windows.
 - **💾 State Persistence** - Your open lazygit tabs are automatically restored even after VSCode restarts.
 - **⌨️ Full Terminal Support** - Supports mouse interactions and standard terminal keyboard shortcuts.
 - **🎨 Theme Awareness** - Automatically adapts to your VSCode editor's font family, font size, and color theme for a seamless visual experience.
@@ -44,7 +45,7 @@ This extension currently does not contribute any specific settings.
 
 - Initial release of **Lazygit Starter**.
 - Core folder context menu integration.
-- High-performance Webview-based terminal implementation.
+- Smooth and responsive integrated terminal experience.
 - Theming and state persistence support.
 
 ---
