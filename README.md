@@ -8,7 +8,10 @@ Open [lazygit](https://github.com/jesseduffield/lazygit) in a new VSCode Webview
 - **Embedded Webview Experience**: Runs `lazygit` inside a VSCode tab using `xterm.js` and `node-pty`, eliminating the need to switch to an external terminal.
 - **State Persistence**: Your open lazygit tabs are restored even after VSCode restarts.
 - **Full Terminal Support**: Supports mouse interactions and standard terminal keyboard shortcuts.
-- **Theme Awareness**: Automatically matches your VSCode editor theme colors for a seamless visual experience.
+- **Theme Awareness**: Automatically adapts to your VSCode editor's font family, font size, and color theme for a seamless visual experience.
+- **Visual Feedback**: The terminal dims slightly when the window loses focus, providing clear visual indication of active state.
+- **Background Execution**: Keeps the lazygit process running in the background even when you switch to other tabs, ensuring you never lose your place.
+- **Smart Tab Titles**: Automatically names the tab after the folder you opened, making it easy to distinguish between multiple active repositories.
 
 ## Requirements
 
