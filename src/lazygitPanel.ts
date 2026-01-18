@@ -59,6 +59,13 @@ export class LazygitPanel {
 
     // Launch lazygit process directly to ensure proper mouse and terminal control
     const shell = process.platform === "win32" ? "lazygit.exe" : "lazygit";
+    const env = {
+      ...process.env,
+      TERM: "xterm-256color",
+      COLORTERM: "truecolor",
+      LANG: "en_US.UTF-8",
+      LC_ALL: "en_US.UTF-8",
+    } as { [key: string]: string };
 
     try {
       this._ptyProcess = pty.spawn(shell, [], {
@@ -66,11 +73,8 @@ export class LazygitPanel {
         cols: 80,
         rows: 24,
         cwd: cwd,
-        env: {
-          ...process.env,
-          TERM: "xterm-256color",
-          COLORTERM: "truecolor",
-        } as { [key: string]: string },
+        useConpty: true,
+        env,
       });
     } catch (err) {
       console.warn("Failed to spawn lazygit directly, falling back to shell", err);
@@ -80,11 +84,8 @@ export class LazygitPanel {
         cols: 80,
         rows: 24,
         cwd: cwd,
-        env: {
-          ...process.env,
-          TERM: "xterm-256color",
-          COLORTERM: "truecolor",
-        } as { [key: string]: string },
+        useConpty: true,
+        env,
       });
       this._ptyProcess.write("lazygit\r");
     }
