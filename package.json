@@ -1,6 +1,7 @@
 {
   "name": "lazygit-starter",
   "publisher": "HenryYang",
+  "icon": "icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/YangHgRi/lazygit-starter"
