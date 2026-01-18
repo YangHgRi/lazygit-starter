@@ -1,12 +1,15 @@
 import * as vscode from "vscode";
+import * as nls from "vscode-nls";
 import { LazygitPanel } from "./lazygitPanel";
+
+const localize = nls.config({ messageFormat: nls.MessageFormat.file })();
 
 export function activate(context: vscode.ExtensionContext) {
   // 1. Register the command to open Lazygit in a Webview
   context.subscriptions.push(
     vscode.commands.registerCommand("lazygit-starter.openLazygit", (uri: vscode.Uri) => {
       if (!uri) {
-        vscode.window.showErrorMessage("Please right-click a folder to open Lazygit.");
+        vscode.window.showErrorMessage(localize("error.noFolder", "Please right-click a folder to open Lazygit."));
         return;
       }
       LazygitPanel.createOrShow(context, uri.fsPath);

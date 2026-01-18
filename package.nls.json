@@ -1,0 +1,6 @@
+{
+  "extension.description": "Open lazygit in a new terminal tab from a folder context menu.",
+  "command.openLazygit": "Open with lazygit",
+  "command.refresh": "Refresh",
+  "error.noFolder": "Please right-click a folder to open Lazygit."
+}

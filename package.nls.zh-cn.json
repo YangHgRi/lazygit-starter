@@ -1,0 +1,6 @@
+{
+  "extension.description": "在文件夹右键菜单中通过新终端页签打开 lazygit。",
+  "command.openLazygit": "使用 lazygit 打开",
+  "command.refresh": "刷新",
+  "error.noFolder": "请右键点击文件夹以打开 Lazygit。"
+}

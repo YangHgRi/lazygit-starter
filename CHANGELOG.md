@@ -4,6 +4,8 @@ All notable changes to the "lazygit-starter" extension will be documented in thi
 
 ## [0.0.8] - 2026-01-18
 
+- **Internationalization**: Added comprehensive Chinese (Simplified) translation for context menu items and error messages.
+- **i18n Support**: Integrated `vscode-nls` and added `package.nls.json` for better localization management.
 - **Manual Refresh**: Added a refresh button in the editor title bar to manually clear screen artifacts by triggering a TUI redraw.
 - **Code Refinement**: Cleaned up experimental rendering hacks and optimized terminal initialization sequence.
 
