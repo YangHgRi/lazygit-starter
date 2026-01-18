@@ -2,6 +2,11 @@
 
 All notable changes to the "lazygit-starter" extension will be documented in this file.
 
+## [0.0.4] - 2026-01-18
+
+- **Terminal Fix**: Disabled xterm.js scrollback to fix UI artifacts and character ghosting in the TUI.
+- **UI Cleanup**: Removed redundant scrollbar styles to simplify the interface.
+
 ## [0.0.3] - 2026-01-18
 
 - **Changelog Configuration**: Migrated release notes from README.md to a dedicated CHANGELOG.md file.
