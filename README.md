@@ -5,6 +5,8 @@
 [![Rating](https://img.shields.io/visual-studio-marketplace/r/HenryYang.lazygit-starter?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=HenryYang.lazygit-starter)
 [![GitHub stars](https://img.shields.io/github/stars/YangHgRi/lazygit-starter?style=flat-square&logo=github)](https://github.com/YangHgRi/lazygit-starter)
 
+![Preview](resources/preview.png)
+
 Open [lazygit](https://github.com/jesseduffield/lazygit) in a new VSCode Webview tab directly from your folder context menu. Streamline your Git workflow without ever leaving your editor!
 
 ---
