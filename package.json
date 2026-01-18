@@ -8,7 +8,7 @@
   },
   "displayName": "Lazygit Starter",
   "description": "Open lazygit in a new terminal tab from a folder context menu.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.75.0"
   },
