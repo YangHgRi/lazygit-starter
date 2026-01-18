@@ -50,7 +50,10 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
-    "package": "vsce package -o out"
+    "package": "vsce package -o out",
+    "deploy:patch": "npm version patch && vsce publish",
+    "deploy:minor": "npm version minor && vsce publish",
+    "deploy:major": "npm version major && vsce publish"
   },
   "devDependencies": {
     "@types/node": "16.x",
