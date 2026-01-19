@@ -33,6 +33,11 @@ You must have [`lazygit`](https://github.com/jesseduffield/lazygit) installed an
 3.  Select **"Open with lazygit"** from the context menu.
 4.  Enjoy the full power of `lazygit` inside a dedicated VSCode tab! 🚀
 
+## 📋 Copy & Paste
+
+- **Paste**: Use `Ctrl+V` (Windows/Linux) or `Cmd+V` (macOS) to paste text. You can also use the browser's native **Right-click** context menu.
+- **Copy**: Use the **Right-click** context menu to copy selected word.
+
 ## ⚙️ Extension Settings
 
 This extension currently does not contribute any specific settings.

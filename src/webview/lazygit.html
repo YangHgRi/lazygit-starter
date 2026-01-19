@@ -76,6 +76,28 @@
       term.open(document.getElementById("terminal"));
       term.focus();
 
+      // Handle paste solely through the browser's paste event to avoid double handling
+      window.addEventListener(
+        "paste",
+        (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const text = (event.clipboardData || window.clipboardData).getData("text");
+          if (text) {
+            vscode.postMessage({ command: "data", data: text });
+          }
+        },
+        true,
+      );
+
+      // Block Ctrl+V / Cmd+V from being handled by xterm.js but don't send data here
+      term.attachCustomKeyEventHandler((arg) => {
+        if ((arg.ctrlKey || arg.metaKey) && arg.key === "v" && arg.type === "keydown") {
+          return false;
+        }
+        return true;
+      });
+
       document.body.addEventListener("click", () => {
         term.focus();
       });

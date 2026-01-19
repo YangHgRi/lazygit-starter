@@ -2,6 +2,11 @@
 
 All notable changes to the "lazygit-starter" extension will be documented in this file.
 
+## [0.0.9] - 2026-01-19
+
+- **Clipboard Support**: Added support for `Ctrl+V` (Windows/Linux) and `Cmd+V` (macOS) as well as right-click menu to paste text into the simulated terminal.
+- **Improved Stability**: Fixed a duplication issue during paste by ensuring a single data source through the native clipboard event.
+
 ## [0.0.8] - 2026-01-18
 
 - **Internationalization**: Added comprehensive Chinese (Simplified) translation for context menu items and error messages.
