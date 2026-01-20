@@ -148,6 +148,38 @@ export class LazygitPanel {
     this._panel.onDidChangeViewState(
       (e) => {
         vscode.commands.executeCommand("setContext", "lazygitActive", e.webviewPanel.active);
+        if (e.webviewPanel.active) {
+          this._panel.webview.postMessage({ command: "focus" });
+          // Multiple attempts to ensure focus is grabbed
+          setTimeout(() => {
+            if (this._panel.active) {
+              this._panel.webview.postMessage({ command: "focus" });
+            }
+          }, 50);
+        }
+      },
+      null,
+      this._disposables,
+    );
+
+    // Listen for window focus changes to restore terminal focus
+    vscode.window.onDidChangeWindowState(
+      (e) => {
+        if (e.focused && this._panel.active) {
+          // Force reveal to grab host-level focus, then message webview
+          this._panel.reveal(this._panel.viewColumn, false);
+          this._panel.webview.postMessage({ command: "focus" });
+
+          // Multiple retries after short delays if the host was still busy
+          [50, 100].forEach((delay) => {
+            setTimeout(() => {
+              if (this._panel.active) {
+                this._panel.reveal(this._panel.viewColumn, false);
+                this._panel.webview.postMessage({ command: "focus" });
+              }
+            }, delay);
+          });
+        }
       },
       null,
       this._disposables,

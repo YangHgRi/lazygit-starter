@@ -2,6 +2,11 @@
 
 All notable changes to the "lazygit-starter" extension will be documented in this file.
 
+## [0.1.0] - 2026-01-20
+
+- **Focus Restoration**: Fixed an issue where the webview would lose keyboard focus after switching between VS Code and other windows.
+- **Robust Syncing**: Implemented a host-level focus synchronization mechanism using `panel.reveal` and dual-stage message pushing to ensure the terminal is always ready for input upon return.
+
 ## [0.0.9] - 2026-01-19
 
 - **Clipboard Support**: Added support for `Ctrl+V` (Windows/Linux) and `Cmd+V` (macOS) as well as right-click menu to paste text into the simulated terminal.

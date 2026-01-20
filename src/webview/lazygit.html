@@ -138,6 +138,9 @@
           vscode.setState(message.state);
         } else if (message.command === "refresh") {
           handleResize();
+        } else if (message.command === "focus") {
+          document.body.classList.remove("blur");
+          term.focus();
         }
       });
 
