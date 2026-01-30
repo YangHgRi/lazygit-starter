@@ -2,6 +2,11 @@
 
 All notable changes to the "lazygit-starter" extension will be documented in this file.
 
+## [0.1.1] - 2026-01-30
+
+- **Focus Optimization**: Simplified the focus hijacking logic to reduce redundant retries and minimize interference with other VSCode UI components.
+- **Improved UX**: Reduced the focus restoration attempts to a single 50ms delayed call, preventing focus from being forcefully stolen when clicking on sidebars or other editor groups.
+
 ## [0.1.0] - 2026-01-20
 
 - **Focus Restoration**: Fixed an issue where the webview would lose keyboard focus after switching between VS Code and other windows.
