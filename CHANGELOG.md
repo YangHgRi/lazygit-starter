@@ -2,6 +2,12 @@
 
 All notable changes to the "lazygit-starter" extension will be documented in this file.
 
+## [0.1.2] - 2026-06-28
+
+- **Fix focus stealing**: Removed `panel.reveal()` call from the window-focus handler — it was the root cause of the extension grabbing focus whenever the VSCode window regained focus, even when the user had clicked a different editor tab.
+- **Remove racy timers**: Eliminated `setTimeout(50ms)` delays from both focus handlers. `onDidChangeViewState` already delivers a settled `active` state in the callback; `onDidChangeWindowState` now posts the webview focus message immediately rather than racing against the user's click.
+- **tsconfig**: Added `"types": ["node"]` so `process` resolves correctly without relying on implicit global type inclusion.
+
 ## [0.1.1] - 2026-01-30
 
 - **Focus Optimization**: Simplified the focus hijacking logic to reduce redundant retries and minimize interference with other VSCode UI components.
