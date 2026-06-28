@@ -144,34 +144,28 @@ export class LazygitPanel {
 
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
 
-    // Update context when focus changes
+    // Update context when panel focus changes. Send "focus" synchronously —
+    // e.webviewPanel.active is already settled at this point, no setTimeout needed.
     this._panel.onDidChangeViewState(
       (e) => {
         vscode.commands.executeCommand("setContext", "lazygitActive", e.webviewPanel.active);
         if (e.webviewPanel.active) {
-          // Single attempt after a short delay to ensure focus is grabbed
-          setTimeout(() => {
-            if (this._panel.active) {
-              this._panel.webview.postMessage({ command: "focus" });
-            }
-          }, 50);
+          this._panel.webview.postMessage({ command: "focus" });
         }
       },
       null,
       this._disposables,
     );
 
-    // Listen for window focus changes to restore terminal focus
+    // Listen for window focus changes to restore terminal focus within the webview.
+    // IMPORTANT: do NOT call panel.reveal() here — that would steal focus from wherever
+    // the user just clicked. The webview's own window "focus" event handles term.focus()
+    // in most cases; this postMessage covers the edge case where VSCode doesn't forward
+    // the iframe focus event after window refocus.
     vscode.window.onDidChangeWindowState(
       (e) => {
         if (e.focused && this._panel.active) {
-          // Single retry after a short delay if the host was still busy
-          setTimeout(() => {
-            if (this._panel.active) {
-              this._panel.reveal(this._panel.viewColumn, false);
-              this._panel.webview.postMessage({ command: "focus" });
-            }
-          }, 50);
+          this._panel.webview.postMessage({ command: "focus" });
         }
       },
       null,
